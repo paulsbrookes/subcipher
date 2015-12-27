@@ -1,5 +1,6 @@
 import numpy as np
 import random
+default_alpha = 'abcdefghijklmnopqrstuvwxyz '
 
 class Key(object):
     def __init__(self, map=[]):
@@ -12,8 +13,8 @@ class Key(object):
         return Key(map_out)
 
     def invert(self):
-        inverted_map = np.zeros(self.map.shape[0])
-        for x in range(self.map.shape[0]):
+        inverted_map = np.zeros(self.map.shape[0], dtype = np.int8)
+        for x in range(self.map.size):
             inverted_map[self.map[x]] = x
         return Key(inverted_map)
 
@@ -23,6 +24,14 @@ class Key(object):
             key[x] = alpha.find(beta[x])
         return Key(key)
 
-    def random_key(self, alpha):
+    def random_key(self, alpha = default_alpha):
         self.map = np.array(range(len(alpha)))
         random.shuffle(self.map)
+
+    def frequency_key(self, natural_frequencies, observed_frequencies):
+        natural_indices_sorted = np.argsort(natural_frequencies)
+        observed_indices_sorted = np.argsort(observed_frequencies)
+        frequency_key = np.zeros(natural_frequencies.size, dtype = np.int8)
+        for i, x in natural_indices_sorted:
+            frequency_key[x] = observed_indices_sorted[i]
+        self.map = frequency_key

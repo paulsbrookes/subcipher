@@ -1,5 +1,6 @@
 from key import Key
 from message import Message
+from key import Key
 import numpy as np
 
 map0 = np.array([1,2,0])
@@ -26,3 +27,19 @@ predicted_frequencies.append(0)
 message = Message(alpha)
 assert message.map(key).text == 'zbcdefghijklmnopqrstuvwxya'
 assert np.all(message.frequencies() == predicted_frequencies)
+
+
+with open('sample.txt','r') as source:
+    text = source.read()
+my_message = Message(text)
+my_message = my_message.filter()
+
+encipher_key = Key()
+encipher_key.random_key()
+
+enciphered_message = my_message.map(encipher_key)
+enciphered_message.text
+decipher_key = encipher_key.invert()
+deciphered_message = enciphered_message.map(decipher_key)
+
+assert deciphered_message.text == my_message.text
