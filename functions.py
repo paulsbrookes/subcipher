@@ -10,9 +10,9 @@ def remove_duplicates(values):
             seen.append(value)
     return output
 
-def key_proliferation(input_keys):
+def key_proliferation(input_keys, number):
     dt = np.dtype(object)
-    key_list = [x.array_swap() for x in input_keys]
+    key_list = [x.array_cycle(number) for x in input_keys]
     map_list = []
     for list in key_list:
         for key in list:

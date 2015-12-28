@@ -71,8 +71,8 @@ class Key(object):
             pass
         return Key(swap_map)
 
-    def array_cycle(self):
-        return [self.cycle(i,j) for i in range(self.map.size-2) for j in range(2)]
+    def array_cycle(self, number):
+        return [self.cycle(i, number, j) for i in range(self.map.size + 1 - number) for j in range(2)]
 
     def swap2(self, i):
         swap_map = np.copy(self.map)
