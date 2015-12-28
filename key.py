@@ -47,9 +47,14 @@ class Key(object):
         swap_map = np.copy(self.map)
         if i == swap_map.size - 1:
             swap_map[i], swap_map[0] = self.map[0], self.map[i]
+        elif i not in range(swap_map.size):
+            pass
         else:
             swap_map[i], swap_map[i + 1] = self.map[i + 1], self.map[i]
         return Key(swap_map)
+
+    def array_swap3(self):
+        return [self.swap3(i) for i in range(self.map.size)]
 
     def array_swap(self):
         return [self.swap(i) for i in range(self.map.size)]

@@ -33,3 +33,16 @@ class Message(object):
             if x in alpha:
                 filtered_message += x
         return Message(filtered_message, self.alpha)
+
+    def triplet_frequencies(self, alpha = 0):
+        if alpha == 0:
+            alpha = self.alpha
+        counts = np.zeros([len(alpha), len(alpha), len(alpha)])
+        for i in range(len(self.text)-2):
+            x = self.alpha.find(self.text[i])
+            y = self.alpha.find(self.text[i+1])
+            z = self.alpha.find(self.text[i+2])
+            counts[x,y,z] += 1
+        rates = counts/(len(self.text) - 2)
+        self.rates = rates
+        return None
