@@ -21,6 +21,17 @@ def key_proliferation(input_keys):
     filtered_key_list = [Key(x) for x in filtered_map_list]
     return filtered_key_list
 
+def key_proliferation3(input_keys):
+    dt = np.dtype(object)
+    key_list = [x.array_cycle() for x in input_keys]
+    map_list = []
+    for list in key_list:
+        for key in list:
+            map_list.append(key.map)
+    filtered_map_list = remove_duplicates(map_list)
+    filtered_key_list = [Key(x) for x in filtered_map_list]
+    return filtered_key_list
+
 def best_keys(key_list, encrypted_message, natural_sample, number_returned = 10):
     metric_list = []
     for key in key_list:
@@ -38,6 +49,8 @@ def best_keys_fast(key_list, encrypted_message, natural_sample, number_returned 
         metric = metric_function_fast(decryption_attempt, natural_sample)
         metric_list.append(metric)
     ranking = np.argsort(metric_list)
+    if number_returned > len(ranking) - 1:
+        number_returned = len(ranking) - 1
     top_key_list = [key_list[x] for x in ranking[0:number_returned]]
     return top_key_list
 
@@ -54,3 +67,7 @@ def metric_function2(decryption_attempt, natural_sample):
     difference = np.absolute(difference)
     metric = -np.sum(difference)
     return metric
+
+def closeness(map):
+    differences = [abs(x-i) for i, x in enumerate(map)]
+    return np.sum(differences)

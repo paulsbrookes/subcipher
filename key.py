@@ -53,11 +53,26 @@ class Key(object):
             swap_map[i], swap_map[i + 1] = self.map[i + 1], self.map[i]
         return Key(swap_map)
 
-    def array_swap3(self):
-        return [self.swap3(i) for i in range(self.map.size)]
-
     def array_swap(self):
         return [self.swap(i) for i in range(self.map.size)]
+
+    def cycle(self, i, direction):
+        swap_map = np.copy(self.map)
+        if i in range(swap_map.size - 2):
+            if direction == 0:
+                swap_map[i], swap_map[i+1], swap_map[i+2],\
+                    = self.map[i+1], self.map[i+2], self.map[i]
+            elif direction == 1:
+                swap_map[i], swap_map[i+1], swap_map[i+2],\
+                    = self.map[i+2], self.map[i], self.map[i+1]
+            else:
+                pass
+        else:
+            pass
+        return Key(swap_map)
+
+    def array_cycle(self):
+        return [self.cycle(i,j) for i in range(self.map.size-2) for j in range(2)]
 
     def swap2(self, i):
         swap_map = np.copy(self.map)
@@ -69,3 +84,25 @@ class Key(object):
 
     def array_swap2(self):
         return [self.swap2(i) for i in range(self.map.size)]
+
+    def pair_scramble(self):
+        i = random.randint(0, self.map.size - 1)
+        if i == self.map.size - 1:
+            self.map[i], self.map[0] = self.map[0], self.map[i]
+        else:
+            self.map[i], self.map[i + 1] = self.map[i + 1], self.map[i]
+
+    def cycle(self, i, number, direction):
+        swap_map = np.copy(self.map)
+        if i in range(swap_map.size + 1 - number):
+            if direction == 0:
+                for j in range(number):
+                    swap_map[i+j] = self.map[i+(j+1)%number]
+            elif direction == 1:
+                for j in range(number):
+                    swap_map[i+j] = self.map[i+(j-1)%number]
+            else:
+                pass
+        else:
+            pass
+        return Key(swap_map)
