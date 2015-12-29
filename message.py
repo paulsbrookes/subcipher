@@ -16,7 +16,7 @@ class Message(object):
                 new_message += mapped_to
         return Message(new_message)
 
-    def frequencies(self, alpha = 0):
+    def frequencies(self, alpha=0):
         if alpha == 0:
             alpha = self.alpha
         counts = np.zeros([len(alpha)])
@@ -25,7 +25,7 @@ class Message(object):
         rates = counts/len(self.text)
         return rates
 
-    def filter(self, alpha = 0):
+    def filter(self, alpha=0):
         if alpha == 0:
             alpha = self.alpha
         filtered_message = ''
@@ -34,7 +34,7 @@ class Message(object):
                 filtered_message += x
         return Message(filtered_message, self.alpha)
 
-    def triplet_frequencies(self, alpha = 0):
+    def triplet_frequencies(self, alpha=0):
         if alpha == 0:
             alpha = self.alpha
         counts = np.zeros([len(alpha), len(alpha), len(alpha)])
@@ -43,6 +43,63 @@ class Message(object):
             y = self.alpha.find(self.text[i+1])
             z = self.alpha.find(self.text[i+2])
             counts[x,y,z] += 1
-        rates = counts/(len(self.text) - 2)
+        rates = counts/(len(self.text)-2)
         self.rates = rates
+        return None
+
+    def triplet_frequency_dictionary(self):
+        self.rate_dictionary = {}
+        for i in range(len(self.text)-2):
+            group = self.text[i:i+3]
+            self.rate_dictionary[group] = self.text.count(group)
+
+    def quadruplet_frequency_dictionary(self):
+        self.rate_dictionary = {}
+        for i in range(len(self.text)-3):
+            group = self.text[i:i+4]
+            self.rate_dictionary[group] = self.text.count(group)
+
+    def frequency_dictionary(self, number):
+        self.rate_dictionary = {}
+        for i in range(len(self.text)+1-number):
+            group = self.text[i:i+number]
+            self.rate_dictionary[group] = self.text.count(group)
+
+    def quadruplet_frequencies(self, alpha=0):
+        if alpha == 0:
+            alpha = self.alpha
+        counts = np.zeros([len(alpha),len(alpha),len(alpha),len(alpha)])
+        for i in range(len(self.text)-3):
+            w = self.alpha.find(self.text[i])
+            x = self.alpha.find(self.text[i+1])
+            y = self.alpha.find(self.text[i+2])
+            z = self.alpha.find(self.text[i+3])
+            counts[w,x,y,z] += 1
+        rates = counts/(len(self.text)-3)
+        self.rates = rates
+        return None
+
+    def general_frequencies(self, number, alpha=0):
+        if alpha == 0:
+            alpha = self.alpha
+        counts = np.zeros([len(alpha) for i in range(number)])
+        for i in range(len(self.text)+1-number):
+            group = self.text[i:i+number]
+            indices = tuple([self.alpha.find(group[i]) for i in range(number)])
+            counts[indices] += 1
+        rates = counts/(len(self.text)+1-number)
+        self.rates = rates
+        return None
+
+    def alt_frequencies(self, alpha=0):
+        if alpha == 0:
+            alpha = self.alpha
+        count_dictionary = {}
+        counts = np.zeros([len(alpha) for i in range(3)])
+        for i in range(len(self.text)-2):
+            group = self.text[i:i+3]
+            count_dictionary[group] = self.text.count(group)
+        for key in count_dictionary:
+            indices = tuple([self.alpha.find(key[i]) for i in range(3)])
+            counts[indices] = count_dictionary[key]
         return None
