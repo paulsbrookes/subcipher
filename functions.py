@@ -81,15 +81,22 @@ def best_keys_fast(key_list, encrypted_message, natural_sample, number_returned 
 
 def metric_function(decryption_attempt, natural_sample):
     decryption_attempt.triplet_frequencies()
-    difference = abs(natural_sample.rates - decryption_attempt.rates)
+    difference = abs(natural_sample.rates[1] - decryption_attempt.rates[1])
     difference = np.absolute(difference) + 1e-12
     metric = -np.sum(1/difference)
     return metric
 
 def metric_function2(decryption_attempt, natural_sample):
     decryption_attempt.quadruplet_frequencies()
-    difference = abs(natural_sample.rates - decryption_attempt.rates)
+    difference = abs(natural_sample.rates[2] - decryption_attempt.rates[2])
     difference = np.absolute(difference) + 1e-16
+    metric = -np.sum(1/difference)
+    return metric
+
+def pair_metric(decryption_attempt, natural_sample):
+    decryption_attempt.group_frequencies(2)
+    difference = abs(natural_sample.rates[0] - decryption_attempt.rates[0])
+    difference = np.absolute(difference) + 1e-6
     metric = -np.sum(1/difference)
     return metric
 
@@ -110,7 +117,7 @@ def quadruplet_dictionary_metric(decryption_attempt, natural_sample, alpha=defau
     metric = 0
     for group in decryption_attempt.rate_dictionary:
         indices = tuple([alpha.find(group[i]) for i in range(4)])
-        if natural_sample.rates[indices] == 0:
+        if natural_sample.rates[2][indices] == 0:
             metric += 1
     return metric
 
@@ -120,6 +127,6 @@ def dict_metric_generator(number, epsilon=5e-6, alpha=default_alpha):
         metric = 0
         for group in decryption_attempt.rate_dictionary:
             indices = tuple([alpha.find(group[i]) for i in range(number)])
-            metric += 1/(natural_sample.rates[indices]+epsilon)
+            metric += 1/(natural_sample.rates[number-2][indices]+epsilon)
         return metric
     return dict_metric

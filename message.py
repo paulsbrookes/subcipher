@@ -4,7 +4,7 @@ class Message(object):
     def __init__(self, text, alpha = 'abcdefghijklmnopqrstuvwxyz '):
         self.text = text
         self.alpha = alpha
-        self.rates = [None for i in range(3)]
+        self.rates = [None for i in range(5)]
 
     def map(self, key):
         new_message = ''
@@ -45,7 +45,7 @@ class Message(object):
             z = self.alpha.find(self.text[i+2])
             counts[x,y,z] += 1
         rates = counts/(len(self.text)-2)
-        self.rates = rates
+        self.rates[1] = rates
         return None
 
     def triplet_frequency_dictionary(self):
@@ -77,7 +77,7 @@ class Message(object):
             z = alpha.find(self.text[i+3])
             counts[w,x,y,z] += 1
         rates = counts/(len(self.text)-3)
-        self.rates = rates
+        self.rates[2] = rates
         return None
 
     def group_frequencies(self, number, alpha=0):
@@ -103,19 +103,4 @@ class Message(object):
         for key in count_dictionary:
             indices = tuple([self.alpha.find(key[i]) for i in range(3)])
             counts[indices] = count_dictionary[key]
-        return None
-
-    def group_frequencies(self, number, alpha=0):
-        if alpha == 0:
-            alpha = self.alpha
-        counts = np.zeros([len(alpha) for i in range(number)])
-        for i in range(len(self.text)+1-number):
-            group =
-            w = alpha.find(self.text[i])
-            x = alpha.find(self.text[i+1])
-            y = alpha.find(self.text[i+2])
-            z = alpha.find(self.text[i+3])
-            counts[w,x,y,z] += 1
-        rates = counts/(len(self.text)-3)
-        self.rates = rates
         return None
