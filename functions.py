@@ -1,7 +1,15 @@
 import numpy as np
 from key import Key
+import itertools
 
 def remove_duplicates(values):
+    list_form = [x.tolist() for x in values]
+    list_form.sort()
+    filtered_list = list(list_form for list_form,_ in itertools.groupby(list_form))
+    filtered_arrays = [np.array(x) for x in filtered_list]
+    return filtered_arrays
+
+def remove_duplicates2(values):
     output = []
     seen = []
     for value in values:
@@ -20,6 +28,18 @@ def key_proliferation(input_keys, number):
     filtered_map_list = remove_duplicates(map_list)
     filtered_key_list = [Key(x) for x in filtered_map_list]
     return filtered_key_list
+
+def key_proliferation_swap(input_keys):
+    dt = np.dtype(object)
+    key_list = [x.array_swap() for x in input_keys]
+    map_list = []
+    for list in key_list:
+        for key in list:
+            map_list.append(key.map)
+    filtered_map_list = remove_duplicates(map_list)
+    filtered_key_list = [Key(x) for x in filtered_map_list]
+    return filtered_key_list
+
 
 def key_proliferation3(input_keys):
     dt = np.dtype(object)
@@ -57,7 +77,7 @@ def best_keys_fast(key_list, encrypted_message, natural_sample, number_returned 
 def metric_function(decryption_attempt, natural_sample):
     decryption_attempt.triplet_frequencies()
     difference = abs(natural_sample.rates - decryption_attempt.rates)
-    difference = np.absolute(difference) + 1e-10
+    difference = np.absolute(difference) + 1e-16
     metric = -np.sum(1/difference)
     return metric
 
