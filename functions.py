@@ -110,13 +110,11 @@ def quadruplet_dictionary_metric(decryption_attempt, natural_sample, alpha=defau
     metric = 0
     for group in decryption_attempt.rate_dictionary:
         indices = tuple([alpha.find(group[i]) for i in range(4)])
-        print group, indices
         if natural_sample.rates[indices] == 0:
-            print "group not found in natural sample"
             metric += 1
     return metric
 
-def dict_metric_generator(number, epsilon=1e-8, alpha=default_alpha):
+def dict_metric_generator(number, epsilon=5e-6, alpha=default_alpha):
     def dict_metric(decryption_attempt, natural_sample):
         decryption_attempt.frequency_dictionary(number)
         metric = 0
