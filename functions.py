@@ -2,7 +2,7 @@ import numpy as np
 from key import Key
 import itertools
 
-default_alpha = 'abcdefghijklmonpqrstuvwxyz '
+default_alpha = 'abcdefghijklmnopqrstuvwxyz '
 
 def remove_duplicates(values):
     list_form = [x.tolist() for x in values]
@@ -110,7 +110,10 @@ def quadruplet_dictionary_metric(decryption_attempt, natural_sample, alpha=defau
     metric = 0
     for group in decryption_attempt.rate_dictionary:
         indices = tuple([alpha.find(group[i]) for i in range(4)])
-        metric += 1/(natural_sample.rates[indices]+1e-14)
+        print group, indices
+        if natural_sample.rates[indices] == 0:
+            print "group not found in natural sample"
+            metric += 1
     return metric
 
 def dict_metric_generator(number, epsilon=1e-8, alpha=default_alpha):

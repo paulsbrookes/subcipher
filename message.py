@@ -70,10 +70,10 @@ class Message(object):
             alpha = self.alpha
         counts = np.zeros([len(alpha),len(alpha),len(alpha),len(alpha)])
         for i in range(len(self.text)-3):
-            w = self.alpha.find(self.text[i])
-            x = self.alpha.find(self.text[i+1])
-            y = self.alpha.find(self.text[i+2])
-            z = self.alpha.find(self.text[i+3])
+            w = alpha.find(self.text[i])
+            x = alpha.find(self.text[i+1])
+            y = alpha.find(self.text[i+2])
+            z = alpha.find(self.text[i+3])
             counts[w,x,y,z] += 1
         rates = counts/(len(self.text)-3)
         self.rates = rates
