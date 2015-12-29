@@ -18,10 +18,10 @@ class Key_Group(object):
         new_maps = [key.map for key in new_keys]
         new_maps_filtered = remove_duplicates(new_maps)
         new_keys_filtered = [Key(map) for map in new_maps_filtered]
-        for key in new_keys:
+        for key in new_keys_filtered:
             decryption_attempt = self.cipher_text.map(key)
             metric = metric_function(decryption_attempt, self.natural_sample)
             metric_results.append(metric)
         ranking = np.argsort(metric_results)
-        best_keys = [new_keys[x] for x in ranking]
+        best_keys = [new_keys_filtered[x] for x in ranking]
         self.keys = best_keys
