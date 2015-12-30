@@ -1,6 +1,7 @@
 import numpy as np
 from functions import remove_duplicates
 from key import Key
+import time
 
 class Key_Group(object):
     def __init__(self, keys, cipher_text, natural_sample):
@@ -25,3 +26,22 @@ class Key_Group(object):
         ranking = np.argsort(metric_results)
         best_keys = [new_keys_filtered[x] for x in ranking]
         self.keys = best_keys
+
+    def proliferate(self, proliferation_functions, number_carried=10):
+        new_keys = []
+        for function in proliferation_functions:
+            new_keys += function(self.keys[0:number_carried])
+        new_maps = [key.map for key in new_keys]
+        new_maps_filtered = remove_duplicates(new_maps)
+        new_keys_filtered = [Key(map) for map in new_maps_filtered]
+        self.keys = new_keys_filtered
+
+    def rank(self, metric_function):
+        metric_results = np.zeros(len(self.keys))
+        for i, key in enumerate(self.keys):
+            decryption_attempt = self.cipher_text.map(key)
+            metric = metric_function(decryption_attempt, self.natural_sample)
+            metric_results[i] = metric
+        ranking = np.argsort(metric_results)
+        ranked_keys = [self.keys[x] for x in ranking]
+        self.keys = ranked_keys
