@@ -5,13 +5,13 @@ class Indices_Group(object):
         self.ciphertexts = ciphertexts
         self.natural_text = natural_text
 
-    def proliferation(self, proliferation_maps, number_carried = 10):
+    def proliferate(self, proliferation_maps, number_carried = 10):
         new_ciphertexts = []
-        for ciphertext in self.ciphertexts:
+        for ciphertext in self.ciphertexts[0:number_carried]:
             new_ciphertexts += [ciphertext.map(map) for map in proliferation_maps]
         self.ciphertexts = new_ciphertexts
 
-    def ranking(self, metric_function):
+    def rank(self, metric_function):
         metric_results = np.zeros(len(self.ciphertexts))
         for i, text in enumerate(self.ciphertexts):
             metric = metric_function(text, self.natural_text)

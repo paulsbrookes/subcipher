@@ -27,10 +27,36 @@ def pair_metric_generator(natural_text):
         return metric
     return pair_metric
 
-
 def remove_duplicates(values):
     map_list = [x.map_record for x in values]
     list_form.sort()
     filtered_list = list(list_form for list_form,_ in itertools.groupby(list_form))
     filtered_arrays = [np.array(x) for x in filtered_list]
     return filtered_arrays
+
+def rm_duplicate_arrays(values):
+    list_form = [x.tolist() for x in values]
+    list_form.sort()
+    filtered_list = list(list_form for list_form,_ in itertools.groupby(list_form))
+    filtered_arrays = [np.array(x) for x in filtered_list]
+    return filtered_arrays
+
+def cycle(map, i, number, direction):
+    new_map = np.copy(map)
+    if direction == 0:
+        for j in range(number):
+            new_map[(i+j)%map.size] = map[(i+(j+1)%number)%map.size]
+    elif direction == 1:
+        for j in range(number):
+            new_map[(i+j)%map.size] = map[(i+(j-1)%number)%map.size]
+    else:
+        pass
+    return new_map
+
+def cycle_list(map, number):
+    return [cycle(map, i, number, j) for i in range(map.size + 1 - number) for j in range(2)]
+
+def cycle_list_gen(number):
+    def cycle_list(map):
+        return [cycle(map, i, number, j) for i in range(map.size + 1 - number) for j in range(2)]
+    return cycle_list

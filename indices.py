@@ -30,7 +30,7 @@ class Indices(object):
         return Message(filtered_message, self.alpha)
 
     def map(self, new_map):
-        new_text_indices = np.zeros(self.text_indices.size)
+        new_text_indices = np.zeros(self.text_indices.size, dtype=np.int32)
         for i, x in enumerate(self.text_indices):
             new_text_indices[i] = new_map[x]
         return Indices(new_text_indices)
