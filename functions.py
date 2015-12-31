@@ -2,7 +2,7 @@ import numpy as np
 from key import Key
 import itertools
 
-default_alpha = 'abcdefghijklmnopqrstuvwxyz '
+default_alpha = ' etaoinshrdlcumwfgypbvkjxqz'
 
 def remove_duplicates(values):
     list_form = [x.tolist() for x in values]

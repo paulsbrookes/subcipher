@@ -1,6 +1,6 @@
 import numpy as np
 import random
-default_alpha = 'abcdefghijklmnopqrstuvwxyz '
+default_alpha = ' etaoinshrdlcumwfgypbvkjxqz'
 
 class Key(object):
     def __init__(self, map=[]):

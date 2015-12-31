@@ -2,11 +2,13 @@ import numpy as np
 import random
 
 class Indices(object):
-    def __init__(self, text_indices=np.zeros(0), alpha='abcdefghijklmnopqrstuvwxyz '):
+    def __init__(self, text_indices=np.zeros(0), map_record=0, alpha=' etaoinshrdlcumwfgypbvkjxqz'):
+        if np.all(map_record == 0):
+            map_record = np.arange(len(alpha))
+        self.map_record = map_record
         self.text_indices = text_indices
-        self.rates = [None for i in range(3)]
+        self.rates = [None for i in range(6)]
         self.alpha = alpha
-        self.map_record = np.arange(len(alpha))
 
     def text_in(self, text):
         def filter(text_in, alpha):
@@ -31,12 +33,12 @@ class Indices(object):
 
     def map(self, new_map):
         new_text_indices = np.zeros(self.text_indices.size, dtype=np.int32)
+        new_map_record = np.zeros(self.map_record.size, dtype=np.int32)
         for i, x in enumerate(self.text_indices):
             new_text_indices[i] = new_map[x]
-        return Indices(new_text_indices)
         for i, x in enumerate(self.map_record):
-            self.map_record[i] = new_map[x]
-        return Indices(new_text_indices)
+            new_map_record[i] = new_map[x]
+        return Indices(new_text_indices, new_map_record)
 
     def substitute(self, new_map):
         for i, x in enumerate(self.text_indices):
@@ -66,11 +68,11 @@ class Indices(object):
 
     def group_frequencies(self, number):
         counts = np.zeros([len(self.alpha) for i in range(number)])
-        for i in range(len(self.text_indices)+1-number):
+        for i in range(len(self.text_indices)-number):
             indices = tuple(self.text_indices[i:i+number])
             counts[indices] += 1
-        rates = counts/(len(self.text)+1-number)
-        self.rates[number-2] = rates
+        rates = counts/(len(self.text_indices)+1-number)
+        self.rates[number-1] = rates
         return None
 
     def pair_frequencies(self):
@@ -78,7 +80,7 @@ class Indices(object):
         for i in range(len(self.text_indices)-1):
             counts[self.text_indices[i],self.text_indices[i+1]] += 1
         rates = counts/(len(self.text_indices)-1)
-        self.rates[0] = rates
+        self.rates[1] = rates
         return None
 
     def pair_frequencies2(self):
@@ -86,4 +88,20 @@ class Indices(object):
         for i in range(len(self.text_indices)-1):
             record[i,i:i+1] = self.text_indices[i:i+1]
         self.rates[1] = record
+        return None
+
+    def triplet_frequencies(self):
+        counts = np.zeros([len(self.alpha) for i in range(3)])
+        for i in range(len(self.text_indices)-2):
+            counts[self.text_indices[i],self.text_indices[i+1],self.text_indices[i+2]] += 1
+        rates = counts/(len(self.text_indices)-2)
+        self.rates[2] = rates
+        return None
+
+    def quadruplet_frequencies(self):
+        counts = np.zeros([len(self.alpha) for i in range(4)])
+        for i in range(len(self.text_indices)-3):
+            counts[self.text_indices[i],self.text_indices[i+1],self.text_indices[i+2],self.text_indices[i+3]] += 1
+        rates = counts/(len(self.text_indices)-3)
+        self.rates[3] = rates
         return None

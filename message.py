@@ -1,7 +1,7 @@
 import numpy as np
 
 class Message(object):
-    def __init__(self, text, alpha = 'abcdefghijklmnopqrstuvwxyz '):
+    def __init__(self, text, alpha = ' etaoinshrdlcumwfgypbvkjxqz'):
         self.text = text
         self.alpha = alpha
         self.rates = [None for i in range(5)]
